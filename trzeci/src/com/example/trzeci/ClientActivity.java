@@ -26,7 +26,7 @@ public class ClientActivity extends Activity {
  
     private boolean connected = false;
     
-    private String str;
+    //private String str;
  
     private Handler handler = new Handler();
     
