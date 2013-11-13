@@ -1,33 +1,16 @@
 package com.example.trzeci;
 
-
-
 import java.io.File;
-
 import java.util.ArrayList;
-
 import java.util.List;
-
-import android.R.bool;
-import android.R.integer;
 import android.app.AlertDialog;
-import android.app.DialogFragment;
-
 import android.app.ListActivity;
-
 import android.content.DialogInterface;
-
 import android.os.Bundle;
-
 import android.view.View;
-
 import android.widget.ArrayAdapter;
-
 import android.widget.ListView;
-
 import android.widget.TextView;
-
-
 
 public class OnCreateActivity extends ListActivity {
 	
@@ -36,7 +19,6 @@ public class OnCreateActivity extends ListActivity {
 	private String root="/";
 	private TextView myPath;
 
-    /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
