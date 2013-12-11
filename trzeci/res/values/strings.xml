@@ -13,5 +13,7 @@
 	<string name="text">test</string>
 	<string name="name">nazwa</string>
 	<string name="tekstEdytowalny">nazwa</string>
+	<string name="WybranePlikiString">List of your last edited files:</string>
+	<string name="go_back">Go back</string>
     
 </resources>
