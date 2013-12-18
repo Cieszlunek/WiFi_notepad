@@ -26,6 +26,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -61,6 +62,7 @@ public class ClientActivity extends Activity {
 	public String fileName;
 	public boolean fileIsSelected;
 	public Resources res;
+	public List<String> List_opened_files;
 	
 
 	@Override
@@ -68,17 +70,18 @@ public class ClientActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client);
         
+        /*
         mIntentFilter = new IntentFilter();
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
-
+*/
         listView = (ListView)findViewById(R.id.list_of_opened_files);
-        //List_opened_files.getResources().getStringArray(R.array.pliki_otwarte);
-        //final List<String> items = new ArrayList<String>();
-        //items.add("a");
-        //items.add("b");
+		//List_opened_files.getResources().getStringArray(R.array.pliki_otwarte_name);
+        final List<String> items = new ArrayList<String>();
+        items.add("a");
+        items.add("b");
         AddItemToList("plii_otwarte_name", "b");
         RefreshList();
        
@@ -132,31 +135,33 @@ public class ClientActivity extends Activity {
             }
 
           });
-        
+        /*
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
         mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
+        */
     }
-	
+/*	
 	@Override
 	public void onResume() {
 		super.onResume();
 		//mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
 		registerReceiver(mReceiver, mIntentFilter);
 	}
-	
+	*/
+/*	
 	@Override
 	public void onPause() {
 		super.onPause();
 		unregisterReceiver(mReceiver);		
 	}
-    
+*/    
     private OnClickListener searchListener = new OnClickListener() {
     	@Override
     	public void onClick(View v) {
-    		DeviceListFragment devList = new DeviceListFragment();
-    		v = devList.getView();
-    		//fileDialog.createFileDialog();
+    		//DeviceListFragment devList = new DeviceListFragment();
+    		//v = devList.getView();
+    		fileDialog.createFileDialog();
     	}
     };
     
