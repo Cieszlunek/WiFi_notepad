@@ -1,14 +1,20 @@
 package com.example.trzeci;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.os.Environment;
 import android.text.InputType;
 import android.widget.EditText;
 
 public class NewFileDialog {
 	
+	private RandomAccessFile newFile;
 	private final Activity activity;
 	public NewFileDialog(Activity activity) {
 		this.activity = activity;
@@ -22,11 +28,20 @@ public class NewFileDialog {
 		input.setInputType(InputType.TYPE_CLASS_TEXT);
 		builder.setView(input);
 		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			
 			@Override
 			public void onClick(DialogInterface dialog, int which){
-				//String t = input.getText().toString();
-				//create file
-			}
+				try {
+					//create file
+					String t = input.getText().toString();
+					if (!("").equals(t)) {
+						newFile = new RandomAccessFile(new File(Environment.getExternalStorageDirectory() , t), "rw");
+						newFile.write(12);
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				}
 		});
 		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 			@Override

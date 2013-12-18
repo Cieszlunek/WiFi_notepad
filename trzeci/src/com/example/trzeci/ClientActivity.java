@@ -1,8 +1,12 @@
 package com.example.trzeci;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
@@ -16,6 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class ClientActivity extends Activity {
 	 
@@ -34,6 +39,9 @@ public class ClientActivity extends Activity {
     private WifiP2pManager mManager;
     private boolean isWifiP2pEnabled;
 	private BroadcastReceiver mReceiver;
+	private Context context;
+	private TextView statusText;
+	private DeviceListFragment deviceListFragment;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,27 +73,28 @@ public class ClientActivity extends Activity {
         
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
-        mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
+        //mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
     }
 	
 	@Override
 	public void onResume() {
 		super.onResume();
 		//mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
-		registerReceiver(mReceiver, mIntentFilter);
+		//registerReceiver(mReceiver, mIntentFilter);
 	}
 	
 	@Override
 	public void onPause() {
 		super.onPause();
-		unregisterReceiver(mReceiver);		
+		//unregisterReceiver(mReceiver);		
 	}
     
     private OnClickListener searchListener = new OnClickListener() {
     	@Override
     	public void onClick(View v) {
-    		DeviceListFragment devList = new DeviceListFragment();
-    		v = devList.getView();
+    		deviceListFragment = new DeviceListFragment();
+    		v = deviceListFragment.getView();
+    		deviceListFragment.
     		//fileDialog.createFileDialog();
     	}
     };
@@ -113,25 +122,41 @@ public class ClientActivity extends Activity {
     public class ClientThread implements Runnable {
         public void run() {        	
             try {
-                InetAddress serverAddr = InetAddress.getByName(serverIpAddress);
-                Log.d("ClientActivity", "C: Connecting...");
-                Socket socket = new Socket(serverAddr, 8080);
-                connected = true;
-                while (connected) {
-                    try {
-                        Log.d("ClientActivity", "C: Sending command.");
-                        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                //InetAddress serverAddr = InetAddress.getByName(serverIpAddress);
+                //Log.d("ClientActivity", "C: Connecting...");
+                //Socket socket = new Socket(serverAddr, 8080);
+                //connected = true;
+            	ServerSocket serverSocket = new ServerSocket(8888);
+            	Socket client = serverSocket.accept();
+            	
+            	final File f = new File(Environment.getExternalStorageDirectory() + "/" + context.getPackageName() + 
+            			"/wifip2pchared-" + System.currentTimeMillis() + ".jpg");
+            	
+            	File dirs = new File(f.getParent());
+            	if (!dirs.exists()) {
+            		dirs.mkdirs();
+            	}
+            	f.createNewFile();
+            	InputStream inputStream = client.getInputStream();
+            	//copyFile(inputStream, new FileOutputStream(f));
+            	serverSocket.close();
+            	//return f.getAbsolutePath();
+            	
+                //while (connected) {
+                    //try {
+                        //Log.d("ClientActivity", "C: Sending command.");
+                        //PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                         // where you issue the commands
                         
-                        out.println("Hey Server!");
-                        Log.d("ClientActivity", "C: Sent.");
-                    } catch (Exception e) {
-                        Log.e("ClientActivity", "S: Error", e);
-                    }
-                }
-                socket.close();
-                Log.d("ClientActivity", "C: Closed.");
-            } catch (Exception e) {
+                        //out.println("Hey Server!");
+                        //Log.d("ClientActivity", "C: Sent.");
+                    //} catch (Exception e) {
+                        //Log.e("ClientActivity", "S: Error", e);
+                    //}
+                //}
+                //socket.close();
+                //Log.d("ClientActivity", "C: Closed.");
+            } catch (IOException e) {
             	//textViewClient.post(new Runnable(){public void run(){textViewClient.setText("Cant connect to server!");}});
                 Log.e("ClientActivity", "C: Error", e);
                 connected = false;

@@ -104,22 +104,20 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
             if (v == null) {
                 LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(
                         Context.LAYOUT_INFLATER_SERVICE);
-                //v = vi.inflate(R.layout.row_devices, null);
+                v = vi.inflate(R.layout.row_devices, null);
             }
             WifiP2pDevice device = items.get(position);
             if (device != null) {
-                //TextView top = (TextView) v.findViewById(R.id.device_name);
-               // TextView bottom = (TextView) v.findViewById(R.id.device_details);
-                //if (top != null) {
-               //     top.setText(device.deviceName);
-              //  }
-              //  if (bottom != null) {
-             //      bottom.setText(getDeviceStatus(device.status));
-             //   }
+                TextView top = (TextView) v.findViewById(R.id.device_name);
+                TextView bottom = (TextView) v.findViewById(R.id.device_details);
+                if (top != null) {
+                    top.setText(device.deviceName);
+                }
+                if (bottom != null) {
+                   bottom.setText(getDeviceStatus(device.status));
+                }
             }
-
             return v;
-
         }
     }
 
