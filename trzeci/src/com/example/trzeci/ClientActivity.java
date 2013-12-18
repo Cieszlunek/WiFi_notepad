@@ -4,15 +4,20 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+=======
+import android.net.wifi.p2p.WifiP2pManager;
+import android.net.wifi.p2p.WifiP2pManager.Channel;
+>>>>>>> f7d7a452b30c3fc18d1a9c7911609a04b6124842
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.app.Activity;
+<<<<<<< HEAD
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -21,26 +26,32 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.text.InputType;
+=======
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
+>>>>>>> f7d7a452b30c3fc18d1a9c7911609a04b6124842
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+<<<<<<< HEAD
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
 
+=======
+>>>>>>> f7d7a452b30c3fc18d1a9c7911609a04b6124842
 
 public class ClientActivity extends Activity {
 	 
-  
-    private Button search;
-    
-    private Button create;
-    
+    private Button search;  
+    private Button create;  
     private Button connect;
+<<<<<<< HEAD
  
     private String serverIpAddress;
     
@@ -67,9 +78,31 @@ public class ClientActivity extends Activity {
     private Resources res;
  
     @Override
+=======
+    private String serverIpAddress; 
+    private boolean connected = false;   
+    //private String str;
+    //private Handler handler = new Handler();    
+    private File mPath;   
+    private FileDialog fileDialog;    
+    private NewFileDialog newFileDialog;
+    private IntentFilter mIntentFilter;
+    private Channel mChannel;
+    private WifiP2pManager mManager;
+    private boolean isWifiP2pEnabled;
+	private BroadcastReceiver mReceiver;
+
+	@Override
+>>>>>>> f7d7a452b30c3fc18d1a9c7911609a04b6124842
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client);
+        
+        mIntentFilter = new IntentFilter();
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
         listView = (ListView)findViewById(R.id.list_of_opened_files);
         //List_opened_files.getResources().getStringArray(R.array.pliki_otwarte);
@@ -105,6 +138,7 @@ public class ClientActivity extends Activity {
         create.setOnClickListener(createListener);
         connect = (Button) findViewById(R.id.connect_button);
         connect.setOnClickListener(connectListener);
+<<<<<<< HEAD
 
     }
     public void RefreshList()
@@ -129,29 +163,49 @@ public class ClientActivity extends Activity {
             }
 
           });
+=======
+        
+        mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+        mChannel = mManager.initialize(this, getMainLooper(), null);
+        mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
+>>>>>>> f7d7a452b30c3fc18d1a9c7911609a04b6124842
     }
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		//mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
+		registerReceiver(mReceiver, mIntentFilter);
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		unregisterReceiver(mReceiver);		
+	}
+    
     private OnClickListener searchListener = new OnClickListener() {
     	@Override
-    	public void onClick(View v){
-    		fileDialog.createFileDialog();
+    	public void onClick(View v) {
+    		DeviceListFragment devList = new DeviceListFragment();
+    		v = devList.getView();
+    		//fileDialog.createFileDialog();
     	}
     };
-    private OnClickListener connectListener = new OnClickListener() {
- 
+    
+    private OnClickListener connectListener = new OnClickListener() { 
         @Override
         public void onClick(View v) {
             if (!connected) {
                 serverIpAddress = "127.0.0.1";
-                if (!serverIpAddress.equals("")) {
-                	
+                if (!("").equals(serverIpAddress)) {              	
                     Thread cThread = new Thread(new ClientThread());
                     cThread.start();
-                }
-                
-            }
-            
+                }              
+            }         
         }
     };
+<<<<<<< HEAD
     private OnClickListener createListener = new OnClickListener(){
     	@Override
     	public void onClick(View v){
@@ -195,13 +249,18 @@ public class ClientActivity extends Activity {
     		});
     		Dialog dialog = builder.create();
     		dialog.show();
+=======
+    
+    private OnClickListener createListener = new OnClickListener() {
+    	@Override
+    	public void onClick(View v) {
+    		newFileDialog.createNewFileDialog();
+>>>>>>> f7d7a452b30c3fc18d1a9c7911609a04b6124842
     	}
     };
  
     public class ClientThread implements Runnable {
- 
-        public void run() {
-        	
+        public void run() {        	
             try {
                 InetAddress serverAddr = InetAddress.getByName(serverIpAddress);
                 Log.d("ClientActivity", "C: Connecting...");
@@ -211,10 +270,10 @@ public class ClientActivity extends Activity {
                     try {
                         Log.d("ClientActivity", "C: Sending command.");
                         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                            // where you issue the commands
+                        // where you issue the commands
                         
-                            out.println("Hey Server!");
-                            Log.d("ClientActivity", "C: Sent.");
+                        out.println("Hey Server!");
+                        Log.d("ClientActivity", "C: Sent.");
                     } catch (Exception e) {
                         Log.e("ClientActivity", "S: Error", e);
                     }
@@ -226,10 +285,9 @@ public class ClientActivity extends Activity {
                 Log.e("ClientActivity", "C: Error", e);
                 connected = false;
             }
-            
-            
         }
     }
+<<<<<<< HEAD
     
     private class StableArrayAdapter extends ArrayAdapter<String> {
 
@@ -266,5 +324,16 @@ public class ClientActivity extends Activity {
     	//editor.putStringSet("pliki_otwarte_name", ss);
     	
     }
+=======
+
+
+    public boolean isWifiP2pEnabled() {
+		return isWifiP2pEnabled;
+	}
+
+	public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
+		this.isWifiP2pEnabled = isWifiP2pEnabled;
+	}
+>>>>>>> f7d7a452b30c3fc18d1a9c7911609a04b6124842
 }
 
