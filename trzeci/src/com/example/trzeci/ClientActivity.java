@@ -4,20 +4,16 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-=======
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
->>>>>>> f7d7a452b30c3fc18d1a9c7911609a04b6124842
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
-<<<<<<< HEAD
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -26,59 +22,28 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.text.InputType;
-=======
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
->>>>>>> f7d7a452b30c3fc18d1a9c7911609a04b6124842
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-<<<<<<< HEAD
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
 
-=======
->>>>>>> f7d7a452b30c3fc18d1a9c7911609a04b6124842
 
 public class ClientActivity extends Activity {
 	 
     private Button search;  
     private Button create;  
     private Button connect;
-<<<<<<< HEAD
+
  
-    private String serverIpAddress;
-    
-    private ListView listView;
- 
-    private boolean connected = false;
-    
-    private String str;
- 
-    private Handler handler = new Handler();
-    
-    private File mPath;
-    
-    private FileDialog fileDialog;
-    
-    private NewFileDialog newFileDialog;
-    
-    public Boolean fileIsSelected;
-    
-    public String fileName;
-    
-    private Activity act;
-    
-    private Resources res;
- 
-    @Override
-=======
     private String serverIpAddress; 
     private boolean connected = false;   
     //private String str;
@@ -91,9 +56,14 @@ public class ClientActivity extends Activity {
     private WifiP2pManager mManager;
     private boolean isWifiP2pEnabled;
 	private BroadcastReceiver mReceiver;
+	public ListView listView;
+	public Activity act;
+	public String fileName;
+	public boolean fileIsSelected;
+	public Resources res;
+	
 
 	@Override
->>>>>>> f7d7a452b30c3fc18d1a9c7911609a04b6124842
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client);
@@ -138,7 +108,6 @@ public class ClientActivity extends Activity {
         create.setOnClickListener(createListener);
         connect = (Button) findViewById(R.id.connect_button);
         connect.setOnClickListener(connectListener);
-<<<<<<< HEAD
 
     }
     public void RefreshList()
@@ -163,12 +132,10 @@ public class ClientActivity extends Activity {
             }
 
           });
-=======
         
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
         mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
->>>>>>> f7d7a452b30c3fc18d1a9c7911609a04b6124842
     }
 	
 	@Override
@@ -205,7 +172,7 @@ public class ClientActivity extends Activity {
             }         
         }
     };
-<<<<<<< HEAD
+    
     private OnClickListener createListener = new OnClickListener(){
     	@Override
     	public void onClick(View v){
@@ -249,16 +216,41 @@ public class ClientActivity extends Activity {
     		});
     		Dialog dialog = builder.create();
     		dialog.show();
-=======
-    
+    	}
+    };
+    	
+    	public class StableArrayAdapter extends ArrayAdapter<String> {
+
+            HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
+
+            public StableArrayAdapter(Context context, int textViewResourceId,
+                List<String> objects) {
+              super(context, textViewResourceId, objects);
+              for (int i = 0; i < objects.size(); ++i) {
+                mIdMap.put(objects.get(i), i);
+              }
+            }
+
+            @Override
+            public long getItemId(int position) {
+              String item = getItem(position);
+              return mIdMap.get(item);
+            }
+
+            @Override
+            public boolean hasStableIds() {
+              return true;
+            }
+
+          }
+/*
     private OnClickListener createListener = new OnClickListener() {
     	@Override
     	public void onClick(View v) {
     		newFileDialog.createNewFileDialog();
->>>>>>> f7d7a452b30c3fc18d1a9c7911609a04b6124842
     	}
     };
- 
+ */
     public class ClientThread implements Runnable {
         public void run() {        	
             try {
@@ -287,32 +279,8 @@ public class ClientActivity extends Activity {
             }
         }
     }
-<<<<<<< HEAD
     
-    private class StableArrayAdapter extends ArrayAdapter<String> {
-
-        HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
-
-        public StableArrayAdapter(Context context, int textViewResourceId,
-            List<String> objects) {
-          super(context, textViewResourceId, objects);
-          for (int i = 0; i < objects.size(); ++i) {
-            mIdMap.put(objects.get(i), i);
-          }
-        }
-
-        @Override
-        public long getItemId(int position) {
-          String item = getItem(position);
-          return mIdMap.get(item);
-        }
-
-        @Override
-        public boolean hasStableIds() {
-          return true;
-        }
-
-      }
+    
     
     public void AddItemToList(String name, String path)
     {
@@ -324,7 +292,6 @@ public class ClientActivity extends Activity {
     	//editor.putStringSet("pliki_otwarte_name", ss);
     	
     }
-=======
 
 
     public boolean isWifiP2pEnabled() {
@@ -334,6 +301,5 @@ public class ClientActivity extends Activity {
 	public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
 		this.isWifiP2pEnabled = isWifiP2pEnabled;
 	}
->>>>>>> f7d7a452b30c3fc18d1a9c7911609a04b6124842
 }
 

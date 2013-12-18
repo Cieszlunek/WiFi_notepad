@@ -20,19 +20,13 @@ public class NewFileDialog extends Activity{
 		this.activity = activity;
 	}
 	
-<<<<<<< HEAD
-	
-	public Dialog createNewFileDialog(){
-=======
 	public Dialog createNewFileDialog() {		
->>>>>>> f7d7a452b30c3fc18d1a9c7911609a04b6124842
 		Dialog dialog = null;
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		builder.setTitle("Enter file name");
 		final EditText input = new EditText(activity);
 		input.setInputType(InputType.TYPE_CLASS_TEXT);
 		builder.setView(input);
-<<<<<<< HEAD
 		
 		builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
 			@Override
@@ -45,14 +39,6 @@ public class NewFileDialog extends Activity{
 					//et.setText(t);
 				}
 				
-				
-=======
-		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which){
-				//String t = input.getText().toString();
-				//create file
->>>>>>> f7d7a452b30c3fc18d1a9c7911609a04b6124842
 			}
 		});
 		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
