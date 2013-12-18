@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,6 +21,7 @@ import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -37,7 +39,14 @@ public class EditorActivity extends Activity{
 	
 	//przy tworzeniu komponentu trzeba podaæ plik Ÿród³owy
 	//public Editor(File file)
-
+	
+	//przechwytywanie naciœniêtego klawisza
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent event) {
+	    Log.i("key pressed", String.valueOf(event.getKeyCode()));
+	    
+	    return super.dispatchKeyEvent(event);
+	}
 	
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +83,7 @@ public class EditorActivity extends Activity{
 	
 	@Override
 	public void onBackPressed() {
-		writeToFile("aa");
+		//save
 		super.onBackPressed();
 
 	}
@@ -168,8 +177,12 @@ public class EditorActivity extends Activity{
 		try
 		{
 			File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + filePath);
+			PrintWriter writer = new PrintWriter(file);
+			writer.print("");
+			writer.close();
 			OutputStream os = new FileOutputStream(file);
 			byte[] arra = text.getBytes();
+			
 			os.write(arra);
 			return 1;//success
 		}
