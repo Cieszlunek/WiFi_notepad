@@ -11,7 +11,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
@@ -23,14 +22,11 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.text.InputType;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.IntentFilter;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -39,7 +35,6 @@ import android.widget.Button;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 
@@ -76,7 +71,7 @@ public class ClientActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client);
         
-        /*
+        
         mIntentFilter = new IntentFilter();
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
@@ -87,7 +82,6 @@ public class ClientActivity extends Activity {
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
-*/
         listView = (ListView)findViewById(R.id.list_of_opened_files);
 		//List_opened_files.getResources().getStringArray(R.array.pliki_otwarte_name);
         final List<String> items = new ArrayList<String>();
@@ -146,27 +140,26 @@ public class ClientActivity extends Activity {
             }
 
           });
-        /*
+        
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
         //mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
-        */
+        
     }
-/*	
+	
 	@Override
 	public void onResume() {
 		super.onResume();
 		//mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
 		//registerReceiver(mReceiver, mIntentFilter);
 	}
-	*/
-/*	
+		
 	@Override
 	public void onPause() {
 		super.onPause();
 		//unregisterReceiver(mReceiver);		
 	}
-*/    
+    
     private OnClickListener searchListener = new OnClickListener() {
     	@Override
     	public void onClick(View v) {
