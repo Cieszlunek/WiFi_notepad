@@ -2,12 +2,12 @@
 <resources>
 
 	<string-array name="pliki_otwarte_name">
-	    <item>pierwszy</item>
-	    <item>drugi</item>
+	    <item>kuba</item>
+	    <item>q</item>
 	</string-array>
 	<string-array name="pliki_otwarte_path">
-	    <item>pierwszy</item>
-	    <item>drugi</item>
+	    <item>kuba.txt</item>
+	    <item>q.txt</item>
 	</string-array>
     
 </resources>

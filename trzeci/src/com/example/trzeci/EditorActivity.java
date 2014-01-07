@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -36,17 +37,14 @@ public class EditorActivity extends Activity{
 	private CharSequence insert;
 	private StringBuffer stringBuffer;
 	public String fileName;
+	private boolean pressed_enter = false;
+
+	private int previous_text_length;
 	
 	//przy tworzeniu komponentu trzeba podaæ plik Ÿród³owy
 	//public Editor(File file)
 	
-	//przechwytywanie naciœniêtego klawisza
-	@Override
-	public boolean dispatchKeyEvent(KeyEvent event) {
-	    Log.i("key pressed", String.valueOf(event.getKeyCode()));
-	    
-	    return super.dispatchKeyEvent(event);
-	}
+
 	
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,13 +75,38 @@ public class EditorActivity extends Activity{
         int position = editText.length();
         editText.setSelection(position);
         editText.addTextChangedListener(TW);
+        editText.setOnKeyListener(new OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+            	if(event.getKeyCode() == KeyEvent.KEYCODE_ENTER )
+            	{
+            		if(!pressed_enter)
+            		{
+            			Log.i("Key pressed", "enter");
+            			editText.append("\n");
+            			pressed_enter = true;
+            			return true;
+            		}
+            		else
+            		{
+            			pressed_enter = false;
+            			return false;
+            		}
+            	}
+            	
+            	return false;
+            }});
+
         stringBuffer = new StringBuffer();
         stringBuffer.append(editText.getText());
+        previous_text_length = editText.getText().length();
 	}
+	
+	
 	
 	@Override
 	public void onBackPressed() {
-		//save
+		saveStringToFile(fileName, editText.getText().toString());
 		super.onBackPressed();
 
 	}
@@ -91,38 +114,47 @@ public class EditorActivity extends Activity{
 	private OnClickListener go_back_listener = new OnClickListener(){
 		@Override
 		public void onClick(View v){
-			saveStringToFile(fileName, stringBuffer.toString());
+			saveStringToFile(fileName, editText.getText().toString());//stringBuffer.toString());
 		}
 	};
 	
 	public void udpate_string()
 	{
-		stringBuffer.insert(cursor_start, insert, 0, insert.length());
+		//stringBuffer.insert(cursor_start, insert, 0, insert.length());
 	}
 	
 	private TextWatcher TW = new TextWatcher(){
 
 		@Override
 		public void afterTextChanged(Editable arg0) {
-			saveStringToFile(fileName, stringBuffer.toString());
+			//saveStringToFile(fileName, stringBuffer.toString());
 			
 		}
 
 		@Override //arg1 - start position of cursor, arg2 - number of changed characters, arg3 - length of new inserted text
 		public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
 				int arg3) {
+			//previous_text_length = arg3;
 			// TODO Auto-generated method stub
 		}
 
 		@Override
 		public void onTextChanged(CharSequence arg0, int arg1, int arg2,
 				int arg3) {
-			cursor_start = arg1;
-			deleted_chars = arg2;
-			insert = arg0;
-			udpate_string();
-			
-			
+			int temp = arg1 + arg3;
+			if(temp > previous_text_length)
+			{
+				Log.i("key pressed", arg0.subSequence(temp - 1, temp).toString());
+			}
+			else if(temp == previous_text_length)
+			{
+				//s³owo zatwierdzone, nic nie robiæ i siê cieszyæ
+			}
+			else
+			{
+				Log.i("Key pressed", "backspace");
+			}
+			previous_text_length = temp;
 		}
 		
 	};

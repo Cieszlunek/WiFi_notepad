@@ -11,6 +11,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
@@ -20,8 +21,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.text.InputType;
 import android.content.BroadcastReceiver;
@@ -64,7 +67,8 @@ public class ClientActivity extends Activity {
 	public boolean fileIsSelected;
 	public Resources res;
 	public List<String> List_opened_files;
-	
+	private Activity thisActivity = this;
+	private final List<String> items = new ArrayList<String>();
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,10 +88,8 @@ public class ClientActivity extends Activity {
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
         listView = (ListView)findViewById(R.id.list_of_opened_files);
 		//List_opened_files.getResources().getStringArray(R.array.pliki_otwarte_name);
-        final List<String> items = new ArrayList<String>();
-        items.add("a");
-        items.add("b");
-        AddItemToList("plii_otwarte_name", "b");
+        
+
         RefreshList();
        
         
@@ -100,12 +102,10 @@ public class ClientActivity extends Activity {
         fileDialog.setFileEndsWith(".txt");
         fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
             public void fileSelected(File file) {
-            	Intent i = new Intent(getApplicationContext(), EditorActivity.class);
-        		i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        		String temp = file.getName();
-        		i.putExtra("fileName", temp);
-    			startActivity(i);
-                Log.d(getClass().getName(), "selected file " + file.toString());
+            	
+        		fileName = file.getName();
+        		GoToEditorActivity();
+        		
             }
         });
         newFileDialog = new NewFileDialog(this);
@@ -118,10 +118,30 @@ public class ClientActivity extends Activity {
         connect.setOnClickListener(connectListener);
 
     }
+	
+	private void GoToEditorActivity()
+	{
+		Intent i = new Intent(getApplicationContext(), EditorActivity.class);
+		i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		i.putExtra("fileName", fileName);
+		startActivity(i);
+        Log.d(getClass().getName(), "selected file " + fileName);
+	}
+	
+	private void AddNewItemToLastOpenedList()
+	{
+		//SharedPreferences sharedPref = thisActivity.getPreferences(Context.MODE_PRIVATE);
+		//SharedPreferences.Editor editor = sharedPref.edit();
+		//editor.putStringSet("pliki_otwarte_path", items);
+	}
+	
     public void RefreshList()
     {
     	res = getResources();
-        String[] itemsa = res.getStringArray(R.array.pliki_otwarte_name);
+//    	SharedPreferences sharedPref = thisActivity.getPreferences(Context.MODE_PRIVATE);
+//    	int nazwa_id = getResources().getInteger(R.array.pliki_otwarte_name);
+//    	Set<String> SS = sharedPref.getStringSet("pliki_otwarte_name", null); 
+         String[] itemsa = res.getStringArray(R.array.pliki_otwarte_name);
         List<String> items = new ArrayList<String>();
         int i = itemsa.length;
         for(int j = 0; j < i; ++j)
@@ -136,7 +156,9 @@ public class ClientActivity extends Activity {
 			@Override
             public void onItemClick(AdapterView<?> parent, final View view,
                 int position, long id) {
-              
+				String[] patches = res.getStringArray(R.array.pliki_otwarte_path);
+				fileName = patches[position];
+				GoToEditorActivity();
             }
 
           });
@@ -160,13 +182,18 @@ public class ClientActivity extends Activity {
 		//unregisterReceiver(mReceiver);		
 	}
     
+	//
+	//deviceListFragment wywala b³¹d - nie rozpoznaje mi co to jest, nie ma do³¹czonej biblioteki? tradycyjnie okomentowa³em :D
+	//
     private OnClickListener searchListener = new OnClickListener() {
     	@Override
     	public void onClick(View v) {
+/*
     		deviceListFragment = new DeviceListFragment();
     		v = deviceListFragment.getView();
-    		deviceListFragment.
-    		//fileDialog.createFileDialog();
+*/
+    		//deviceListFragment.
+    		fileDialog.createFileDialog();
     	}
     };
     
@@ -206,8 +233,24 @@ public class ClientActivity extends Activity {
     				try
     				{
     					file.createNewFile();
+    					
+    					//odœwie¿a listê plików do przeszukiwania. bez tego od razu po stworzeniu pliku nie by³o go widaæ w dialogu szukania, trzeba by³o albo reset aplikacji albo wejœæ i wyjœæ do innego katalogu
+    					mPath = new File(Environment.getExternalStorageDirectory() + "//DIR//");
+    			        fileDialog = new FileDialog(thisActivity, mPath);
+    			        fileDialog.setFileEndsWith(".txt");
+    			        fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
+    			            public void fileSelected(File file) {
+    			            	Intent i = new Intent(getApplicationContext(), EditorActivity.class);
+    			        		i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+    			        		String temp = file.getName();
+    			        		i.putExtra("fileName", temp);
+    			    			startActivity(i);
+    			                Log.d(getClass().getName(), "selected file " + file.toString());
+    			            }
+    			        });
+    			        newFileDialog = new NewFileDialog(thisActivity);
     					Intent i = new Intent(getApplicationContext(), EditorActivity.class);
-    					String temp = file.getPath();
+    					fileName = t;
     	        		i.putExtra(fileName, fileName);
     					startActivity(i);
     					
@@ -261,6 +304,11 @@ public class ClientActivity extends Activity {
     	}
     };
  */
+    
+    //
+    //context.getPackageName() wywala b³¹d, context nie istnieje, okomentowa³em ;)
+    //
+
     public class ClientThread implements Runnable {
         public void run() {        	
             try {
@@ -271,7 +319,8 @@ public class ClientActivity extends Activity {
             	ServerSocket serverSocket = new ServerSocket(8888);
             	Socket client = serverSocket.accept();
             	
-            	final File f = new File(Environment.getExternalStorageDirectory() + "/" + context.getPackageName() + 
+            	/*
+				final File f = new File(Environment.getExternalStorageDirectory() + "/" + context.getPackageName() + 
             			"/wifip2pchared-" + System.currentTimeMillis() + ".jpg");
             	
             	File dirs = new File(f.getParent());
@@ -296,6 +345,8 @@ public class ClientActivity extends Activity {
                         //Log.e("ClientActivity", "S: Error", e);
                     //}
                 //}
+                 * */
+                 
                 //socket.close();
                 //Log.d("ClientActivity", "C: Closed.");
             } catch (IOException e) {
@@ -308,16 +359,7 @@ public class ClientActivity extends Activity {
     
     
     
-    public void AddItemToList(String name, String path)
-    {
-    	//SharedPreferences.Editor editor = (Editor) getSharedPreferences(path, R.array.pliki_otwarte_name);
-    	
-    	//Set<String> ss = null;
-    	//ss.add("a");
-    	//ss.add("b");
-    	//editor.putStringSet("pliki_otwarte_name", ss);
-    	
-    }
+
 
 
     public boolean isWifiP2pEnabled() {
