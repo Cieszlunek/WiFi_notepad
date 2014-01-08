@@ -9,11 +9,12 @@
 	<string name="create_new">Create new file</string>
 	<string name="dialog_title">Select file to work</string>
 	<string name="create">Create new file</string>
-	<string name="search">Select file</string>
+	<string name="search">Find devices</string>
 	<string name="text">test</string>
 	<string name="name">nazwa</string>
 	<string name="tekstEdytowalny">nazwa</string>
 	<string name="device_name">Nazwa urządzenia</string>
+	<string name="title_paired_devices">title_paired_devices</string>
 	<string name="device_details">Szczegóły</string>
 	<string name="WybranePlikiString">List of your last edited files:</string>
 	<string name="go_back">Go back</string>

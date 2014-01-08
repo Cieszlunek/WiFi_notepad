@@ -29,43 +29,47 @@ public final class R {
     }
     public static final class id {
         public static final int TextViewWybranePliki=0x7f090003;
-        public static final int action_settings=0x7f09000a;
+        public static final int action_settings=0x7f09000c;
         public static final int connect_button=0x7f090000;
         public static final int create_button=0x7f090001;
-        public static final int device_details=0x7f090009;
-        public static final int device_name=0x7f090008;
+        public static final int device_details=0x7f09000b;
+        public static final int device_name=0x7f09000a;
         public static final int editorText=0x7f090006;
         public static final int go_back=0x7f090005;
         public static final int list_of_opened_files=0x7f090004;
-        public static final int rowtext=0x7f090007;
+        public static final int paired_devices=0x7f090008;
+        public static final int rowtext=0x7f090009;
         public static final int search_button=0x7f090002;
+        public static final int title_paired_devices=0x7f090007;
     }
     public static final class layout {
         public static final int activity_client=0x7f030000;
         public static final int activity_editor=0x7f030001;
-        public static final int row=0x7f030002;
-        public static final int row_devices=0x7f030003;
+        public static final int device_list=0x7f030002;
+        public static final int row=0x7f030003;
+        public static final int row_devices=0x7f030004;
     }
     public static final class menu {
         public static final int main=0x7f080000;
     }
     public static final class string {
-        public static final int WybranePlikiString=0x7f06000e;
+        public static final int WybranePlikiString=0x7f06000f;
         public static final int action_settings=0x7f060001;
         public static final int app_name=0x7f060000;
         public static final int connect=0x7f060002;
         public static final int connection=0x7f060003;
         public static final int create=0x7f060007;
         public static final int create_new=0x7f060005;
-        public static final int device_details=0x7f06000d;
+        public static final int device_details=0x7f06000e;
         public static final int device_name=0x7f06000c;
         public static final int dialog_title=0x7f060006;
-        public static final int go_back=0x7f06000f;
+        public static final int go_back=0x7f060010;
         public static final int ip=0x7f060004;
         public static final int name=0x7f06000a;
         public static final int search=0x7f060008;
         public static final int tekstEdytowalny=0x7f06000b;
         public static final int text=0x7f060009;
+        public static final int title_paired_devices=0x7f06000d;
     }
     public static final class style {
         /** 

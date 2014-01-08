@@ -34,13 +34,13 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-       // this.setListAdapter(new WiFiPeerListAdapter(getActivity(), R.layout.row_devices, peers));
+        this.setListAdapter(new WiFiPeerListAdapter(getActivity(), R.layout.row_devices, peers));
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-      //  mContentView = inflater.inflate(R.layout.device_list, null);
+        mContentView = inflater.inflate(R.layout.device_list, null);
         return mContentView;
     }
 
@@ -136,14 +136,16 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
 
     @Override
     public void onPeersAvailable(WifiP2pDeviceList peerList) {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
+        if (progressDialog != null) {
+        	if (progressDialog.isShowing()) {
+        		progressDialog.dismiss();
+        	}
         }
         peers.clear();
         peers.addAll(peerList.getDeviceList());
         ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
         if (peers.size() == 0) {
-            //Log.d(WiFiDirectActivity.TAG, "No devices found");
+            Log.d(ClientActivity.TAG, "No devices found");
             return;
         }
 
@@ -158,8 +160,10 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
      * 
      */
     public void onInitiateDiscovery() {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
+        if (progressDialog != null) {
+        	if (progressDialog.isShowing()) {
+        		progressDialog.dismiss();
+        	}
         }
         progressDialog = ProgressDialog.show(getActivity(), "Press back to cancel", "finding peers", true,
                 true, new DialogInterface.OnCancelListener() {

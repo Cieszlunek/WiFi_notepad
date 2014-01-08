@@ -39,8 +39,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.EditText;
 import android.widget.ListView;
-
-
+import android.widget.Toast;
 
 public class ClientActivity extends Activity {
 	 
@@ -60,7 +59,7 @@ public class ClientActivity extends Activity {
     private Channel mChannel;
     private WifiP2pManager mManager;
     private boolean isWifiP2pEnabled;
-	private BroadcastReceiver mReceiver;
+	private BroadcastReceiver mReceiver = null;
 	public ListView listView;
 	public Activity act;
 	public String fileName;
@@ -69,7 +68,10 @@ public class ClientActivity extends Activity {
 	public List<String> List_opened_files;
 	private Activity thisActivity = this;
 	private final List<String> items = new ArrayList<String>();
+	private DeviceListFragment deviceListFragment;
+	public static final String TAG = "wifidirectdemo";
 
+	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,6 +119,8 @@ public class ClientActivity extends Activity {
         connect = (Button) findViewById(R.id.connect_button);
         connect.setOnClickListener(connectListener);
 
+        mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+        mChannel = mManager.initialize(this, getMainLooper(), null);
     }
 	
 	private void GoToEditorActivity()
@@ -163,9 +167,6 @@ public class ClientActivity extends Activity {
 
           });
         
-        mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-        mChannel = mManager.initialize(this, getMainLooper(), null);
-        //mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
         
     }
 	
@@ -182,18 +183,32 @@ public class ClientActivity extends Activity {
 		//unregisterReceiver(mReceiver);		
 	}
     
-	//
-	//deviceListFragment wywala b³¹d - nie rozpoznaje mi co to jest, nie ma do³¹czonej biblioteki? tradycyjnie okomentowa³em :D
-	//
     private OnClickListener searchListener = new OnClickListener() {
     	@Override
     	public void onClick(View v) {
-/*
+
     		deviceListFragment = new DeviceListFragment();
     		v = deviceListFragment.getView();
-*/
+    		deviceListFragment.onInitiateDiscovery();
+    		mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
+				
+				@Override
+				public void onSuccess() {
+					Toast.makeText(ClientActivity.this, "Discovery Initiated", 
+							Toast.LENGTH_SHORT).show();
+					
+				}
+				
+				@Override
+				public void onFailure(int reason) {
+					Toast.makeText(ClientActivity.this, "Discovery Failed: " + reason,
+							Toast.LENGTH_SHORT).show();
+					
+				}
+			});
+
     		//deviceListFragment.
-    		fileDialog.createFileDialog();
+    		//fileDialog.createFileDialog();
     	}
     };
     
