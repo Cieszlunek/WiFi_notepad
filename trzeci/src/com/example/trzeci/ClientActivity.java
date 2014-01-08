@@ -112,12 +112,14 @@ public class ClientActivity extends Activity {
         });
         newFileDialog = new NewFileDialog(this);
         
+        
+        
         search = (Button) findViewById(R.id.search_button);
-        search.setOnClickListener(searchListener);
+        search.setOnClickListener(openFileListener);
         create = (Button) findViewById(R.id.create_button);
         create.setOnClickListener(createListener);
         connect = (Button) findViewById(R.id.connect_button);
-        connect.setOnClickListener(connectListener);
+        connect.setOnClickListener(searchListener);
 
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
@@ -183,13 +185,20 @@ public class ClientActivity extends Activity {
 		//unregisterReceiver(mReceiver);		
 	}
     
+	private OnClickListener openFileListener = new OnClickListener(){
+		@Override
+		public void onClick(View v) {
+			fileDialog.createFileDialog();
+		}
+	};
+	
     private OnClickListener searchListener = new OnClickListener() {
     	@Override
     	public void onClick(View v) {
 
     		deviceListFragment = new DeviceListFragment();
     		v = deviceListFragment.getView();
-    		deviceListFragment.onInitiateDiscovery();
+    		deviceListFragment.onInitiateDiscovery();	/* ta linijka wywala mi b³¹d aplikacji  */
     		mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
 				
 				@Override
@@ -208,7 +217,6 @@ public class ClientActivity extends Activity {
 			});
 
     		//deviceListFragment.
-    		//fileDialog.createFileDialog();
     	}
     };
     
