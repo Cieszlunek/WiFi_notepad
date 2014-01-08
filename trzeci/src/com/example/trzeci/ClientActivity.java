@@ -10,6 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -90,8 +91,15 @@ public class ClientActivity extends Activity {
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
         listView = (ListView)findViewById(R.id.list_of_opened_files);
 		//List_opened_files.getResources().getStringArray(R.array.pliki_otwarte_name);
-        
+        //AddNewItemToLastOpenedList();
 
+        //czyszczenie listy
+        //
+        //SharedPreferences sharedPref = thisActivity.getPreferences(Context.MODE_PRIVATE);
+		//SharedPreferences.Editor editor = sharedPref.edit();
+		//editor.remove("pliki_otwarte_name");
+		//editor.commit();
+        
         RefreshList();
        
         
@@ -134,26 +142,50 @@ public class ClientActivity extends Activity {
         Log.d(getClass().getName(), "selected file " + fileName);
 	}
 	
-	private void AddNewItemToLastOpenedList()
+	private void AddNewItemToLastOpenedList(String name, String path)
 	{
-		//SharedPreferences sharedPref = thisActivity.getPreferences(Context.MODE_PRIVATE);
-		//SharedPreferences.Editor editor = sharedPref.edit();
-		//editor.putStringSet("pliki_otwarte_path", items);
+		SharedPreferences sharedPref = thisActivity.getPreferences(Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = sharedPref.edit();
+		Set<String> s = sharedPref.getStringSet("pliki_otwarte_name", null);
+		Set<String> set = new HashSet<String>();
+		set.addAll(s);
+		if(!set.contains(name))
+		{
+			set.add(name);
+			editor.putStringSet("pliki_otwarte_name", set);
+			editor.commit();
+			Set<String> ss = sharedPref.getStringSet("pliki_otwarte_path", null);
+			Set<String> sset = new HashSet<String>();
+			sset.addAll(ss);
+			sset.add(path);
+			editor.putStringSet("pliki_otwarte_path", sset);
+			editor.commit();
+		}
+		//editor.putStringSet("pliki_otwarte_name", s);
+		//editor.commit();
+		
 	}
+	
 	
     public void RefreshList()
     {
-    	res = getResources();
-//    	SharedPreferences sharedPref = thisActivity.getPreferences(Context.MODE_PRIVATE);
-//    	int nazwa_id = getResources().getInteger(R.array.pliki_otwarte_name);
-//    	Set<String> SS = sharedPref.getStringSet("pliki_otwarte_name", null); 
-         String[] itemsa = res.getStringArray(R.array.pliki_otwarte_name);
-        List<String> items = new ArrayList<String>();
-        int i = itemsa.length;
-        for(int j = 0; j < i; ++j)
+    	//res = getResources();
+        //String[] itemsa = res.getStringArray(R.array.pliki_otwarte_name);
+    	SharedPreferences sharedPref = thisActivity.getPreferences(Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = sharedPref.edit();
+		Set<String> s = sharedPref.getStringSet("pliki_otwarte_name", null);
+		List<String> items = new ArrayList<String>();
+        if(s!= null)
         {
-        	items.add(itemsa[j]);
+        	if(s.size() > 0)
+        	{
+        		for(String str : s)
+        		{
+        			items.add(str);
+        		}
+        	}
         }
+		
         
         StableArrayAdapter adapter = new StableArrayAdapter(this, R.layout.row, items);
         listView.setAdapter(adapter);
