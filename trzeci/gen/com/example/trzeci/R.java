@@ -45,13 +45,15 @@ public final class R {
     }
     public static final class layout {
         public static final int activity_client=0x7f030000;
-        public static final int activity_editor=0x7f030001;
-        public static final int device_list=0x7f030002;
-        public static final int row=0x7f030003;
-        public static final int row_devices=0x7f030004;
+        public static final int activity_device_list=0x7f030001;
+        public static final int activity_editor=0x7f030002;
+        public static final int device_list=0x7f030003;
+        public static final int row=0x7f030004;
+        public static final int row_devices=0x7f030005;
     }
     public static final class menu {
-        public static final int main=0x7f080000;
+        public static final int device_list=0x7f080000;
+        public static final int main=0x7f080001;
     }
     public static final class string {
         public static final int GoToWifi=0x7f060011;
@@ -66,11 +68,13 @@ public final class R {
         public static final int device_name=0x7f06000c;
         public static final int dialog_title=0x7f060006;
         public static final int go_back=0x7f060010;
+        public static final int hello_world=0x7f060013;
         public static final int ip=0x7f060004;
         public static final int name=0x7f06000a;
         public static final int search=0x7f060002;
         public static final int tekstEdytowalny=0x7f06000b;
         public static final int text=0x7f060009;
+        public static final int title_activity_device_list=0x7f060012;
         public static final int title_paired_devices=0x7f06000d;
     }
     public static final class style {
