@@ -227,7 +227,9 @@ public class ClientActivity extends Activity {
 	private OnClickListener tryWifiListener = new OnClickListener(){
 		@Override
 		public void onClick(View v) {
-			//w sumie teraz mi to nie jest potrzebne, ale mo¿e kiedyœ siê przyda xD
+			Intent i = new Intent(getApplicationContext(), Chapter9Activity.class);
+			i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			startActivity(i);
 		}
 	};
 	

@@ -290,6 +290,7 @@ class RunnableThread implements Runnable {
 				}
 				Thread.sleep(300); //abyœmy mogli siê wgryŸæ w pêtlê dodaj¹c dane
 			}
+			out.println("#exit");
 			out.close();
 			kkSocket.close();
 		} catch (UnknownHostException e) {
