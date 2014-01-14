@@ -1,3 +1,4 @@
+
 package com.example.trzeci;
 
 import android.app.Activity;
@@ -21,115 +22,98 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
-public class Chapter9Activity extends Activity implements ChannelListener,OnClickListener,PeerListListener, ConnectionInfoListener 
-{
-private WifiP2pManager manager;
-private final IntentFilter intentFilter = new IntentFilter();
-private Channel channel;
-private BroadcastReceiver receiver = null;
-private Button buttonFind;
-private Button buttonConnect;
-private WifiP2pDevice device;
 
-@Override
-public void onChannelDisconnected() {
-//handle the channel lost event
-}
+public class Chapter9Activity extends Activity implements ChannelListener, OnClickListener, PeerListListener, ConnectionInfoListener {
 
-@Override
-public void onPeersAvailable(WifiP2pDeviceList peerList) {
-for (WifiP2pDevice device : peerList.getDeviceList()) {
-this.device = device;
-break;
-}
-}
+    private WifiP2pManager manager;
+    private final IntentFilter intentFilter = new IntentFilter();
+    private Channel channel;
+    private BroadcastReceiver receiver = null;
+    private Button buttonFind;
+    private Button buttonConnect;
+    private WifiP2pDevice device;
 
-@Override
-public void onConnectionInfoAvailable(WifiP2pInfo info) {
-String infoname = info.groupOwnerAddress.toString();
-}
+    @Override
+    public void onChannelDisconnected() {
+    	//handle the channel lost event
+    }
 
-public void connect(WifiP2pDevice device)
-{
-WifiP2pConfig config = new WifiP2pConfig();
-if(device != null)
-{
-config.deviceAddress = device.deviceAddress;
-manager.connect(channel, config, new ActionListener() {
-@Override
-public void onSuccess() {
-//success
-}
-@Override
-public void onFailure(int reason) {
-//fail
-}
-});
-}
-else
-{
-Toast.makeText(Chapter9Activity.this, "Couldn't connect, device is not found",
-Toast.LENGTH_SHORT).show();
-}
-}
-public void find()
-{
-manager.discoverPeers(channel, new
-WifiP2pManager.ActionListener()
-{
-@Override
-public void onSuccess() {
-Toast.makeText(Chapter9Activity.this, "Finding Peers",
-Toast.LENGTH_SHORT).show();
-}
-@Override
-public void onFailure(int reasonCode)
-{
-Toast.makeText(Chapter9Activity.this, "Couldnt find peers ",
-Toast.LENGTH_SHORT).show();
-}
-});
-}
+    @Override
+    public void onPeersAvailable(WifiP2pDeviceList peerList) {
+        for (WifiP2pDevice device : peerList.getDeviceList()) {
+            this.device = device;
+            break;
+        }
+    }
 
+    @Override
+    public void onConnectionInfoAvailable(WifiP2pInfo info) {
+        String infoname = info.groupOwnerAddress.toString();
+    }
 
+    public void connect(WifiP2pDevice device) {
+        WifiP2pConfig config = new WifiP2pConfig();
+        if (device != null) {
+            config.deviceAddress = device.deviceAddress;
+            manager.connect(channel, config, new ActionListener() {
+                @Override
+                public void onSuccess() {
+                	//success
+                }
 
-@Override
-public void onClick(View v) {
-if(v == buttonConnect)
-{
-connect(this.device);
-}
-else if(v == buttonFind)
-{
-find();
-}
-}
+                @Override
+                public void onFailure(int reason) {
+                	//fail
+                }
+            });
+        } else {
+            Toast.makeText(Chapter9Activity.this, "Couldn't connect, device is not found",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
 
+    public void find() {
+        manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(Chapter9Activity.this, "Finding Peers",
+                        Toast.LENGTH_SHORT).show();
+            }
 
-@Override
-public void onCreate(Bundle savedInstanceState) {
-super.onCreate(savedInstanceState);
-setContentView(R.layout.wifi_try_hard);
-manager = (WifiP2pManager)
-getSystemService(Context.WIFI_P2P_SERVICE);
-channel = manager.initialize(this, getMainLooper(), null);
-intentFilter.addAction(WifiP2pManager.
-WIFI_P2P_STATE_CHANGED_ACTION);
-intentFilter.addAction(WifiP2pManager.
-WIFI_P2P_PEERS_CHANGED_ACTION);
-intentFilter.addAction(WifiP2pManager.
-WIFI_P2P_CONNECTION_CHANGED_ACTION);
-intentFilter.addAction(WifiP2pManager.
-WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
-receiver = new
-Chapter9WiFiDirectBroadcastReceiver(manager, channel,
-this);
-registerReceiver(receiver, intentFilter);
-this.buttonConnect = (Button)
-this.findViewById(R.id.buttonConnect);
-this.buttonConnect.setOnClickListener(this);
-this.buttonFind =
-(Button)this.findViewById(R.id.buttonFind);
-this.buttonFind.setOnClickListener(this);
-}
+            @Override
+            public void onFailure(int reasonCode) {
+                Toast.makeText(Chapter9Activity.this, "Couldnt find peers ",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == buttonConnect) {
+            connect(this.device);
+        } else if (v == buttonFind) {
+            find();
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.wifi_try_hard);
+        manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+        channel = manager.initialize(this, getMainLooper(), null);
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+        receiver = new Chapter9WiFiDirectBroadcastReceiver(manager, channel,
+                this);
+        registerReceiver(receiver, intentFilter);
+        this.buttonConnect = (Button) this.findViewById(R.id.buttonConnect);
+        this.buttonConnect.setOnClickListener(this);
+        this.buttonFind =
+                (Button) this.findViewById(R.id.buttonFind);
+        this.buttonFind.setOnClickListener(this);
+    }
 }
