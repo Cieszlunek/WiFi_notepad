@@ -1,5 +1,6 @@
 package com.example.trzeci;
 
+import android.app.Activity;
 import android.app.ListFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -29,7 +30,7 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
     private List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
     ProgressDialog progressDialog = null;
     View mContentView = null;
-    ListView lw;
+    //ListView lw;
     private WifiP2pDevice device;
 
     @Override
@@ -54,7 +55,7 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
     }
 
     private static String getDeviceStatus(int deviceStatus) {
-       // Log.d(WiFiDirectActivity.TAG, "Peer status :" + deviceStatus);
+    	Log.d(ClientActivity.TAG, "Peer status :" + deviceStatus);
         switch (deviceStatus) {
             case WifiP2pDevice.AVAILABLE:
                 return "Available";
@@ -130,10 +131,10 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
      */
     public void updateThisDevice(WifiP2pDevice device) {
         this.device = device;
-        //TextView view = (TextView) mContentView.findViewById(R.id.my_name);
-        //view.setText(device.deviceName);
-        //view = (TextView) mContentView.findViewById(R.id.my_status);
-        //view.setText(getDeviceStatus(device.status));
+        TextView view = (TextView) mContentView.findViewById(R.id.list_of_opened_files);
+        view.setText(device.deviceName);
+        view = (TextView) mContentView.findViewById(R.id.list_of_opened_files);
+        view.setText(getDeviceStatus(device.status));
     }
 
     @Override
@@ -167,7 +168,9 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
         		progressDialog.dismiss();
         	}
         }
-        progressDialog = ProgressDialog.show(getActivity(), "Press back to cancel", "finding peers", true,
+        Activity act = getActivity();
+        if (act != null) {
+        	progressDialog = ProgressDialog.show(act, "Press back to cancel", "finding peers", true,
                 true, new DialogInterface.OnCancelListener() {
 
                     @Override
@@ -175,6 +178,7 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
                         
                     }
                 });
+        }
     }
 
     /**
