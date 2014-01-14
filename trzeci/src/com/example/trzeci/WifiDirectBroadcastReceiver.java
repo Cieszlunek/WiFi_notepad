@@ -1,4 +1,4 @@
-package com.example.trzeci;
+/*package com.example.trzeci;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -51,3 +51,4 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 		}
 	}
 }
+*/

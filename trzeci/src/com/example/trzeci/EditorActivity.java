@@ -1,6 +1,7 @@
 package com.example.trzeci;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -13,6 +14,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 import android.app.Activity;
 import android.content.Context;
@@ -39,6 +44,11 @@ public class EditorActivity extends Activity{
 	public String fileName;
 	private boolean pressed_enter = false;
 
+	private String ServerIp = "192.168.1.100";
+	private int ServerPort = 8888;
+	private Socket socket = null;
+
+	
 	private int previous_text_length;
 	
 	//przy tworzeniu komponentu trzeba podaæ plik Ÿród³owy
@@ -97,12 +107,40 @@ public class EditorActivity extends Activity{
             	return false;
             }});
 
-        stringBuffer = new StringBuffer();
-        stringBuffer.append(editText.getText());
+        //stringBuffer = new StringBuffer();
+       // stringBuffer.append(editText.getText());
         previous_text_length = editText.getText().length();
+        
+        //zabawa z socketami
+        InetAddress serverAddr;
+		try {
+			serverAddr = InetAddress.getByName(ServerIp);
+			socket = new Socket(ServerIp, ServerPort);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	//	try {
+			//PrintWriter out = new PrintWriter( new BufferedWriter( new OutputStreamWriter(socket.getOutputStream())),true);
+			///out.println("witam$");
+			//out.flush();
+			//out.println("Tutaj Kuba$");
+			//out.flush();
+	//	} catch (IOException e) {
+			// TODO Auto-generated catch block
+	//		e.printStackTrace();
+	//	} 
+
 	}
 	
 	
+	
+	
+
 	
 	@Override
 	public void onBackPressed() {

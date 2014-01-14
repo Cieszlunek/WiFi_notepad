@@ -47,6 +47,8 @@ public class ClientActivity extends Activity {
     private Button search;  
     private Button create;  
     private Button connect;
+    
+    private Button tryWifiButton;
 
  
     private String serverIpAddress; 
@@ -131,7 +133,12 @@ public class ClientActivity extends Activity {
 
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
+        
+        tryWifiButton = (Button) findViewById(R.id.GoToWifiActivity);
+        tryWifiButton.setOnClickListener(tryWifiListener);
     }
+	
+	
 	
 	private void GoToEditorActivity()
 	{
@@ -217,6 +224,13 @@ public class ClientActivity extends Activity {
 		//unregisterReceiver(mReceiver);		
 	}
     
+	private OnClickListener tryWifiListener = new OnClickListener(){
+		@Override
+		public void onClick(View v) {
+			//w sumie teraz mi to nie jest potrzebne, ale mo¿e kiedyœ siê przyda xD
+		}
+	};
+	
 	private OnClickListener openFileListener = new OnClickListener(){
 		@Override
 		public void onClick(View v) {
