@@ -46,7 +46,8 @@ public class EditorActivity extends Activity{
 
 	private String ServerIp = "192.168.1.100";
 	private int ServerPort = 8888;
-	private Socket socket = null;
+	//private Socket kksocket = null;
+	private RunnableThread SendThread;
 
 	
 	private int previous_text_length;
@@ -93,7 +94,9 @@ public class EditorActivity extends Activity{
             		if(!pressed_enter)
             		{
             			Log.i("Key pressed", "enter");
+            			int pos = editText.getSelectionStart();
             			editText.append("\n");
+            			boolean zmienna = SendThread.TrySendData("Enter," + pos);
             			pressed_enter = true;
             			return true;
             		}
@@ -112,18 +115,9 @@ public class EditorActivity extends Activity{
         previous_text_length = editText.getText().length();
         
         //zabawa z socketami
-        InetAddress serverAddr;
-		try {
-			serverAddr = InetAddress.getByName(ServerIp);
-			socket = new Socket(ServerIp, ServerPort);
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-			catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        //z w¹tku g³ównego nie mo¿na u¿ywaæ socketów - aplikacja siê automatycznie crashuje - ograniczenie odgórne
+        SendThread = new RunnableThread("thread1");
+        boolean zmienna = SendThread.TrySendData("Witam, tutaj Android ^,,^");
 	//	try {
 			//PrintWriter out = new PrintWriter( new BufferedWriter( new OutputStreamWriter(socket.getOutputStream())),true);
 			///out.println("witam$");
@@ -137,7 +131,7 @@ public class EditorActivity extends Activity{
 
 	}
 	
-	
+
 	
 	
 
@@ -146,13 +140,14 @@ public class EditorActivity extends Activity{
 	public void onBackPressed() {
 		saveStringToFile(fileName, editText.getText().toString());
 		super.onBackPressed();
-
+		SendThread.Stop();
 	}
 	
 	private OnClickListener go_back_listener = new OnClickListener(){
 		@Override
 		public void onClick(View v){
 			saveStringToFile(fileName, editText.getText().toString());//stringBuffer.toString());
+			SendThread.Stop();
 		}
 	};
 	
@@ -183,6 +178,7 @@ public class EditorActivity extends Activity{
 			if(temp > previous_text_length)
 			{
 				Log.i("key pressed", arg0.subSequence(temp - 1, temp).toString());
+				SendThread.TrySendData(arg0.subSequence(temp - 1, temp).toString() +"," + arg1);
 			}
 			else if(temp == previous_text_length)
 			{
@@ -190,25 +186,16 @@ public class EditorActivity extends Activity{
 			}
 			else
 			{
+				if(arg0.equals(null))
+				{
 				Log.i("Key pressed", "backspace");
+				}
+				SendThread.TrySendData("backspace," + arg1);
 			}
 			previous_text_length = temp;
 		}
 		
 	};
-	
-	private void writeToFile(String data) {
-	    try {
-	    	
-	        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput("razdwatrzy", Context.MODE_APPEND));
-	        outputStreamWriter.write(data);
-	        outputStreamWriter.close();
-	    }
-	    catch (IOException e) {
-	        Log.e("Exception", "File write failed: " + e.toString());
-	    } 
-	}
-
 	
 	private String getStringFromFile (String filePath)
 	{
@@ -262,4 +249,93 @@ public class EditorActivity extends Activity{
 		}
 		return 0;
 	}
+}
+
+
+
+
+//thread class to communicate over sockets
+class RunnableThread implements Runnable {
+
+	Thread runner;
+	public boolean RUN = true;
+	public String DataToSend = "";
+	private Object ToLock = new Object();
+	
+	public RunnableThread() {
+	}
+	public RunnableThread(String threadName) {
+		runner = new Thread(this, threadName); // (1) Create a new thread.
+		//System.out.println(runner.getName());
+		Log.e("New thread started ", runner.getName());
+		runner.start(); // (2) Start the thread.
+	}
+	public void run() {
+		//Display info about this particular thread
+		//System.out.println(Thread.currentThread());
+		try {
+			Socket kkSocket = new Socket("192.168.1.100", 8888);
+			PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);
+			while(RUN)
+			{
+				synchronized(ToLock)
+				{
+					if(!DataToSend.equals(""))
+					{
+						out.println(DataToSend);
+						out.flush();
+						DataToSend = "";
+					}
+						
+				}
+				Thread.sleep(300); //abyœmy mogli siê wgryŸæ w pêtlê dodaj¹c dane
+			}
+			out.close();
+			kkSocket.close();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void Stop()
+	{
+		RUN = false;
+	}
+	
+	/*-----------------------Do funkcji podajesz stringa do wys³ania - je¿eli zwróci true -> dane zosta³y dopisane do wys³ania, false -> nie mo¿na dopisaæ, 
+	 * trzeba wys³aæ ca³y plik przy nastêpnym po³¹czeniu
+	 */
+	public boolean TrySendData(String str)
+	{
+		int len;
+		synchronized(ToLock)
+		{
+			len = DataToSend.length();
+		}
+		if(len > 1000)
+		{
+			return false;
+		}
+		
+		synchronized(ToLock)
+		{
+			if(DataToSend.equals(""))
+			{
+				DataToSend = str;
+			}
+			else
+			{
+				DataToSend += "\n" + str;
+			}
+		}
+		
+		return true;
+	}
+	
 }
