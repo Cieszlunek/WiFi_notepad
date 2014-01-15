@@ -14,8 +14,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
+import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
+import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
@@ -42,7 +47,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class ClientActivity extends Activity {
+public class ClientActivity extends Activity implements ConnectionInfoListener, PeerListListener {
 	 
     private Button search;  
     private Button create;  
@@ -73,6 +78,7 @@ public class ClientActivity extends Activity {
 	private final List<String> items = new ArrayList<String>();
 	private DeviceListFragment deviceListFragment;
 	public static final String TAG = "wifidirectdemo";
+	private WifiP2pDevice device;
 
 	
 	@Override
@@ -131,6 +137,9 @@ public class ClientActivity extends Activity {
         connect = (Button) findViewById(R.id.connect_button);
         connect.setOnClickListener(searchListener);
 
+        mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel,
+                this);
+        //registerReceiver(mReceiver, mIntentFilter);
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
         
@@ -214,14 +223,14 @@ public class ClientActivity extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		//mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
-		//registerReceiver(mReceiver, mIntentFilter);
+		mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
+		registerReceiver(mReceiver, mIntentFilter);
 	}
 		
 	@Override
 	public void onPause() {
 		super.onPause();
-		//unregisterReceiver(mReceiver);		
+		unregisterReceiver(mReceiver);		
 	}
     
 	private OnClickListener tryWifiListener = new OnClickListener(){
@@ -428,17 +437,26 @@ public class ClientActivity extends Activity {
         }
     }
     
-    
-    
-
-
-
     public boolean isWifiP2pEnabled() {
 		return isWifiP2pEnabled;
 	}
 
 	public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
 		this.isWifiP2pEnabled = isWifiP2pEnabled;
+	}
+
+	@Override
+	public void onConnectionInfoAvailable(WifiP2pInfo info) {
+        String infoname = info.groupOwnerAddress.toString();
+		
+	}
+
+	@Override
+	public void onPeersAvailable(WifiP2pDeviceList peers) {
+		for (WifiP2pDevice device : peers.getDeviceList()) {
+            this.device = device;
+            break;
+        }
 	}
 }
 

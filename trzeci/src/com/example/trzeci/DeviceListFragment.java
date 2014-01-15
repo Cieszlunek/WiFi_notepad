@@ -159,9 +159,6 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
         ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
     }
 
-    /**
-     * 
-     */
     public void onInitiateDiscovery() {
         if (progressDialog != null) {
         	if (progressDialog.isShowing()) {
