@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class Chapter9Activity extends Activity implements ChannelListener, OnClickListener, PeerListListener, ConnectionInfoListener {
@@ -32,6 +33,7 @@ public class Chapter9Activity extends Activity implements ChannelListener, OnCli
     private Button buttonFind;
     private Button buttonConnect;
     private WifiP2pDevice device;
+    private ListView deviceList;
 
     @Override
     public void onChannelDisconnected() {
@@ -42,6 +44,8 @@ public class Chapter9Activity extends Activity implements ChannelListener, OnCli
     public void onPeersAvailable(WifiP2pDeviceList peerList) {
         for (WifiP2pDevice device : peerList.getDeviceList()) {
             this.device = device;
+            Toast.makeText(Chapter9Activity.this, "Device found",
+                    Toast.LENGTH_SHORT).show();
             break;
         }
     }
@@ -49,6 +53,8 @@ public class Chapter9Activity extends Activity implements ChannelListener, OnCli
     @Override
     public void onConnectionInfoAvailable(WifiP2pInfo info) {
         String infoname = info.groupOwnerAddress.toString();
+        Toast.makeText(Chapter9Activity.this, infoname,
+                Toast.LENGTH_SHORT).show();
     }
 
     public void connect(WifiP2pDevice device) {
@@ -59,11 +65,15 @@ public class Chapter9Activity extends Activity implements ChannelListener, OnCli
                 @Override
                 public void onSuccess() {
                 	//success
+                	Toast.makeText(Chapter9Activity.this, "Connected",
+                            Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onFailure(int reason) {
                 	//fail
+                	Toast.makeText(Chapter9Activity.this, "Connection failed",
+                            Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
@@ -78,6 +88,7 @@ public class Chapter9Activity extends Activity implements ChannelListener, OnCli
             public void onSuccess() {
                 Toast.makeText(Chapter9Activity.this, "Finding Peers",
                         Toast.LENGTH_SHORT).show();
+                //manager.
             }
 
             @Override
@@ -94,6 +105,8 @@ public class Chapter9Activity extends Activity implements ChannelListener, OnCli
             connect(this.device);
         } else if (v == buttonFind) {
             find();
+            Toast.makeText(Chapter9Activity.this, "Finished finding Peers",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 

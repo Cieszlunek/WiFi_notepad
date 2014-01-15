@@ -30,7 +30,7 @@ public final class R {
     public static final class id {
         public static final int GoToWifiActivity=0x7f090003;
         public static final int TextViewWybranePliki=0x7f090004;
-        public static final int action_settings=0x7f09000f;
+        public static final int action_settings=0x7f090010;
         public static final int buttonConnect=0x7f09000e;
         public static final int buttonFind=0x7f09000d;
         public static final int connect_button=0x7f090000;
@@ -39,6 +39,7 @@ public final class R {
         public static final int device_name=0x7f09000b;
         public static final int editorText=0x7f090007;
         public static final int go_back=0x7f090006;
+        public static final int listView1=0x7f09000f;
         public static final int list_of_opened_files=0x7f090005;
         public static final int paired_devices=0x7f090009;
         public static final int rowtext=0x7f09000a;
@@ -63,18 +64,20 @@ public final class R {
         public static final int WybranePlikiString=0x7f06000f;
         public static final int action_settings=0x7f060001;
         public static final int app_name=0x7f060000;
-        public static final int connect=0x7f060008;
+        public static final int connect=0x7f060014;
         public static final int connection=0x7f060003;
         public static final int create=0x7f060007;
         public static final int create_new=0x7f060005;
         public static final int device_details=0x7f06000e;
         public static final int device_name=0x7f06000c;
         public static final int dialog_title=0x7f060006;
+        public static final int find=0x7f060015;
+        public static final int find_devices=0x7f060002;
         public static final int go_back=0x7f060010;
         public static final int hello_world=0x7f060013;
         public static final int ip=0x7f060004;
         public static final int name=0x7f06000a;
-        public static final int search=0x7f060002;
+        public static final int open_file=0x7f060008;
         public static final int tekstEdytowalny=0x7f06000b;
         public static final int text=0x7f060009;
         public static final int title_activity_device_list=0x7f060012;
