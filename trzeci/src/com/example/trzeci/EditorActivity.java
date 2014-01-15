@@ -302,6 +302,7 @@ class RunnableThread implements Runnable {
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+					
 		}
 	}
 	public void Stop()
